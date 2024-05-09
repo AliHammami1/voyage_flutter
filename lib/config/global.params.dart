@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../notifier/theme.dart';
 
 class GlobalParams {
   static List<Map<String,dynamic>> menus = [
@@ -19,4 +20,6 @@ class GlobalParams {
     {"title":"images/parametres.png","icon":Icon(Icons.settings, color: Colors.blueGrey),"route":"/parametres"},
     {"title":"images/deconnexion.png","icon":Icon(Icons.logout, color: Colors.blueGrey),"route":"/login"},
   ];
+
+  static MonTheme themeActuel=MonTheme();
 }

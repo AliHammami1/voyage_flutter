@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -38,6 +39,7 @@ class AuthentificationPage extends StatelessWidget {
               Container(
                 padding: EdgeInsets.all(10),
                 child: TextFormField(
+                  obscureText: true,
                   controller: txt_psw,
                   decoration: InputDecoration(
                     prefixIcon: Icon(Icons.vpn_key),
@@ -91,19 +93,33 @@ class AuthentificationPage extends StatelessWidget {
   }
   
     Future<void> _onlog(BuildContext context) async{
-    prefs = await SharedPreferences.getInstance();
-    var log = prefs.getString("login");
-    var psw = prefs.getString("psw"); // zedneha async ... await bech n9olo requete tebta chwaya estaneha w raja3li type de future
-    if(txt_login.text == log && txt_psw.text == psw){
-      prefs.setBool("connecte", true);
+    try {
+      final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: txt_login.text,
+        password: txt_psw.text
+      );
       Navigator.pop(context);
       Navigator.pushNamed(context, '/home');
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        print('No user found for that email.');
+      } else if (e.code == 'wrong-password') {
+        print('Wrong password provided for that user.');
+      }
     }
-    else {
-      const snackBar = SnackBar(
-        content: Text('verifier les login et psw')
-      );
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
-    }
+    //prefs = await SharedPreferences.getInstance();
+    //var log = prefs.getString("login");
+    //var psw = prefs.getString("psw"); // zedneha async ... await bech n9olo requete tebta chwaya estaneha w raja3li type de future
+    //if(txt_login.text == log && txt_psw.text == psw){
+      //prefs.setBool("connecte", true);
+      //Navigator.pop(context);
+      //Navigator.pushNamed(context, '/home');
+    //}
+    //else {
+      //const snackBar = SnackBar(
+        //content: Text('verifier les login et psw')
+      //);
+      //ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    //}
   }
 }
